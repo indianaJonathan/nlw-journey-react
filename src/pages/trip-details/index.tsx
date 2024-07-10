@@ -44,6 +44,23 @@ export function TripDetailsPage() {
         loadData();
     }
 
+    if (!trip) return (
+        <div className="w-full h-screen flex flex-col gap-4 items-center justify-center">
+            <img src="/Logo.svg" />
+            <div className="p-4 flex flex-col gap-3 items-center justify-center rounded-md bg-zinc-800">
+                <span className="text-zinc-400 font-semibold text-3xl">Viagem não encontrada</span>
+                <p className="text-zinc-500">Pode ser que a viagem tenha sido cancelada ou o link tenha expirado.</p>
+                <a href="/">
+                    <div className="rounded-md ring-1 ring-lime-300 px-2.5 py-1.5 hover:bg-lime-300 group">
+                        <span className="text-lime-300 font-semibold group-hover:text-zinc-950">
+                            Clique aqui para voltar
+                        </span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    )
+
     return (
         <div className="max-w-6xl px-6 py-10 mx-auto space-y-8">
             <DestinationAndDateHeader />
