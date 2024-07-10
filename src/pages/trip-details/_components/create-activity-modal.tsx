@@ -5,10 +5,14 @@ import { api } from "../../../lib/axios";
 import { useParams } from "react-router-dom";
 
 interface CreateActivityModalProps {
-    closeModal: () => void
+    tripStart: Date;
+    tripEnd: Date;
+    closeModal: () => void;
 }
 
 export function CreateActivityModal ({
+    tripStart,
+    tripEnd,
     closeModal
 }: CreateActivityModalProps) {
     const { tripId } = useParams();
@@ -62,6 +66,8 @@ export function CreateActivityModal ({
                                 name="occurs_at"
                                 placeholder="Data e horário da atividade"
                                 className="bg-transparent text-lg placehoder-zinc-400 outline-none flex-1"
+                                min={tripStart.toISOString().substring(0, 11).concat("00:00:00")}
+                                max={tripEnd.toISOString().substring(0, 11).concat("23:59:59")}
                             />
                         </div>
                     </div>

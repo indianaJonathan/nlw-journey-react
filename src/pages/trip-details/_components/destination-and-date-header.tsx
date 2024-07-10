@@ -1,12 +1,13 @@
 import { Calendar, MapPin, Settings2 } from "lucide-react";
 import { Button } from "../../../components/button";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "../../../lib/axios";
 import { useParams } from "react-router-dom";
 import { ptBR } from "date-fns/locale";
 import { format } from "date-fns";
+import { UpdateTripModal } from "./update-trip-modal";
 
-interface Trip {
+export interface Trip {
     id: string;
     destination: string;
     starts_at: string;
@@ -17,11 +18,17 @@ interface Trip {
 export function DestinationAndDateHeader () {
     const { tripId } = useParams();
 
-    const [trip, setTrip] = useState<Trip | undefined>();
+    const [trip, setTrip] = useState<Trip>();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const loadTrip = useCallback(async () => {
+        const response = await api.get(`/trips/${tripId}`);
+        setTrip(response.data.trip);
+    }, [tripId]);
 
     useEffect(() => {
-        api.get(`/trips/${tripId}`).then(response => setTrip(response.data.trip));
-    }, [tripId]);
+        loadTrip();
+    }, [loadTrip]);
 
     const displayedDate = trip
         ? format(new Date(trip.starts_at), "dd 'de' LLL", { locale: ptBR }).concat(" até ").concat(format(new Date(trip.ends_at), "dd 'de' LLL", { locale: ptBR }))
@@ -39,10 +46,23 @@ export function DestinationAndDateHeader () {
                     <span className="text-zinc-100">{displayedDate}</span>
                 </div>
                 <div className="min-w-px min-h-6 bg-zinc-800" />
-                <Button variant="secondary">
+                <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => setIsModalOpen(true)}
+                >
                     Alterar local e data
                     <Settings2 className="size-5" />
                 </Button>
+                {isModalOpen && (
+                    <UpdateTripModal
+                        trip={trip!}
+                        closeModal={() => {
+                            loadTrip();
+                            setIsModalOpen(false);
+                        }}
+                    />
+                )}
             </div>
         </div>
     );

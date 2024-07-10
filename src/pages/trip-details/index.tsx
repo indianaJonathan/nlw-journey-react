@@ -8,7 +8,7 @@ import { Button } from "../../components/button";
 import { Activities } from "./_components/activities";
 import { ImportantLinks } from "./_components/important-links";
 import { CreateActivityModal } from "./_components/create-activity-modal";
-import { DestinationAndDateHeader } from "./_components/destination-and-date-header";
+import { DestinationAndDateHeader, Trip } from "./_components/destination-and-date-header";
 
 import { api } from "../../lib/axios";
 
@@ -26,19 +26,22 @@ export function TripDetailsPage() {
 
     const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] = useState(false);
     const [activities, setActivities] = useState<Activity[]>([]);
+    const [trip, setTrip] = useState<Trip>();
 
-    const loadActivities = useCallback(async () => {
+    const loadData = useCallback(async () => {
         const response = await api.get(`/trips/${tripId}/activities`);
         setActivities(response.data.activities);
+        const responseTrip = await api.get(`/trips/${tripId}`);
+        setTrip(responseTrip.data.trip);
     }, [tripId]);
 
     useEffect(() => {
-        loadActivities();
-    }, [loadActivities]);
+        loadData();
+    }, [loadData]);
 
     function closeModal() {
         setIsCreateActivityModalOpen(false);
-        loadActivities();
+        loadData();
     }
 
     return (
@@ -67,7 +70,12 @@ export function TripDetailsPage() {
                     <Guests />
                 </div>
             </main>
-            {isCreateActivityModalOpen && <CreateActivityModal closeModal={closeModal} />}
+            {isCreateActivityModalOpen && (
+                <CreateActivityModal
+                    tripStart={new Date(trip!.starts_at)}
+                    tripEnd={new Date(trip!.ends_at)}
+                    closeModal={closeModal} />
+            )}
         </div>
     )
 }
