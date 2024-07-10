@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import {  Plus } from "lucide-react";
 
@@ -8,8 +9,8 @@ import { Activities } from "./_components/activities";
 import { ImportantLinks } from "./_components/important-links";
 import { CreateActivityModal } from "./_components/create-activity-modal";
 import { DestinationAndDateHeader } from "./_components/destination-and-date-header";
+
 import { api } from "../../lib/axios";
-import { useParams } from "react-router-dom";
 
 export interface Activity {
     date: string;
