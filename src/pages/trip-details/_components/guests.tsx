@@ -1,10 +1,11 @@
 import { CircleCheck, CircleDashed, UserCog } from "lucide-react";
 import { Button } from "../../../components/button";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "../../../lib/axios";
+import { ManagerGuestsModal } from "./manage-guests-modal";
 
-interface Paticipant {
+export interface Participant {
     id: string;
     name: string | null;
     email: string;
@@ -14,14 +15,17 @@ interface Paticipant {
 export function Guests() {
     const { tripId } = useParams();
 
-    const [participants, setParticipants] = useState<Paticipant[]>([]);
+    const [participants, setParticipants] = useState<Participant[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const loadParticipants = useCallback(async () => {
+        const response = await api.get(`/trips/${tripId}/participants`);
+        setParticipants(response.data.participants);
+    }, [tripId]);
 
     useEffect(() => {
-        api.get(`/trips/${tripId}/participants`).then(response => {
-            console.log("participants", response.data);
-            return setParticipants(response.data.participants);
-        });
-    }, [tripId]);
+        loadParticipants();
+    }, [loadParticipants]);
 
     return (
         <div className="space-y-6">
@@ -41,10 +45,20 @@ export function Guests() {
                 type="button"
                 variant="secondary"
                 size="full"
+                onClick={() => setIsModalOpen(true)}
             >
                 <UserCog className="size-5" />
                 Gerenciar convidados
             </Button>
+            {isModalOpen && (
+                <ManagerGuestsModal
+                    guests={participants}
+                    closeModal={() => {
+                        loadParticipants();
+                        setIsModalOpen(false);
+                    }}
+                />
+            )}
         </div>
     );
 }
