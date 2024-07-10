@@ -1,3 +1,4 @@
+![nlw-journey](https://github.com/indianaJonathan/nlw-journey-react/assets/22666576/56ba4c58-19f1-4989-888f-879c4b358697)
 # plann.er
 
 This app uses Vite, React.JS, Typescript and other technologies to create a trip planner web app.
