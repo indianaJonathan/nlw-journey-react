@@ -10,6 +10,7 @@ export interface Participant {
     name: string | null;
     email: string;
     is_confirmed: boolean;
+    is_owner: boolean;
 }
 
 export function Guests() {

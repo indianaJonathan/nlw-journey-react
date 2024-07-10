@@ -5,7 +5,7 @@ This app uses Vite, React.JS, Typescript and other technologies to create a trip
 
 ## Quick start
 
-_You need to setup the [backend project](https://github.com/rocketseat-education/nlw-journey-nodejs) in order to this application work properly_
+_You need to setup the [backend project](https://github.com/indianaJonathan/nlw-journey-nodejs) in order to this application work properly_
 
 Install dependencies
 ```shell

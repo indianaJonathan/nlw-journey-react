@@ -1,4 +1,4 @@
-import { AtSign, CircleCheck, CircleDashed, Plus } from "lucide-react";
+import { AtSign, CircleCheck, CircleDashed, Crown, Plus, Trash } from "lucide-react";
 import { Modal } from "../../../components/modal";
 import { Participant } from "./guests";
 import { Button } from "../../../components/button";
@@ -24,18 +24,38 @@ export function ManagerGuestsModal({ guests,closeModal }: ManagerGuestsModalProp
         closeModal();
     }
 
+    async function handleRemoveGuest(guestId: string) {
+        await api.delete(`/trips/${tripId}/participants/${guestId}`);
+        closeModal();
+    }
+
     return (
         <Modal
             title="Gerenciar convidados"
             onClose={closeModal}
         >
             { guests.map((guest) => (
-                <div key={`guest-${guest.id}`} className="flex items-center justify-between px-2.5 py-1.5 rounded-md hover:bg-zinc-800">
+                <div key={`guest-${guest.id}`} className="flex items-center gap-3 px-2.5 py-1.5 rounded-md hover:bg-zinc-800 group">
+                  <div className="flex items-center justify-between flex-1">
                     <div className="space-y-1">
                         <span className="block font-medium text-zinc-100">{ guest.name }</span>
                         <span className="block text-sm text-zinc-400">{ guest.email }</span>
                     </div>
                     { guest.is_confirmed ? <CircleCheck className="text-lime-300 size-5 shrink-0" /> : <CircleDashed className="text-zinc-400 size-5 shrink-0" /> }
+                  </div>
+                  { !guest.is_owner ? (
+                    <Button
+                        variant="secondary"
+                        onClick={() => handleRemoveGuest(guest.id)}
+                        title="Remover convidado"
+                    >
+                      <Trash className="text-zinc-400 size-4 shrink-0" />
+                    </Button>
+                  ) : (
+                    <div className="bg-zinc-700 group-hover:bg-zinc-900 rounded-lg px-5 py-2 font-medium flex items-center justify-center gap-2" title="Organizador">
+                        <Crown className="text-zinc-400 size-4 shrink-0" />
+                    </div>
+                  )}
                 </div>
             )) }
             <div className="h-px bg-zinc-700"/>
